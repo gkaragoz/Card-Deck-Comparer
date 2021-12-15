@@ -13,14 +13,18 @@ namespace AnyCardGame.Entity
         {
             Cards = new List<Card>();
 
-            int cardId = 1;
             foreach (Suit suit in Enum.GetValues(typeof(Suit)))
             {
                 foreach (Kind kind in Enum.GetValues(typeof(Kind)))
                 {
-                    Cards.Add(new Card(cardId++, kind, suit));
+                    Cards.Add(new Card(kind, suit));
                 }
             }
+        }
+
+        public Deck(List<Card> cards)
+        {
+            Cards = cards;
         }
 
         public Card DrawCardAt(int index)

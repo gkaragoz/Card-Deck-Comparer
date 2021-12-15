@@ -2,111 +2,62 @@
 using AnyCardGame.Enums;
 using AnyCardGame.Utils;
 using NUnit.Framework;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class DeckSorterTest
 {
-    [Test]
-    public void CheckDeckCountIs52()
-    {
-        Deck deck = new Deck();
-
-        var deckCount = deck.Count;
-
-        Assert.AreEqual(52, deckCount, $"Deck count should be 52.");
-    }
-
-    [Test]
-    public void DrawBottomCardIsEqualToNumber52()
-    {
-        Deck deck = new Deck();
-
-        var topCard = deck.DrawBottomCard();
-
-        Assert.AreEqual(52, topCard.Id, $"Drawn top card's should be 52.");
-    }
+    private Deck _deck = new Deck(
+            new List<Card>
+        {
+            new Card(Kind.Ace, Suit.Hearts),
+            new Card(Kind.Two, Suit.Spades),
+            new Card(Kind.Five, Suit.Diamonds),
+            new Card(Kind.Four, Suit.Hearts),
+            new Card(Kind.Ace, Suit.Spades),
+            new Card(Kind.Three, Suit.Diamonds),
+            new Card(Kind.Four, Suit.Clubs),
+            new Card(Kind.Four, Suit.Spades),
+            new Card(Kind.Ace, Suit.Diamonds),
+            new Card(Kind.Three, Suit.Spades),
+            new Card(Kind.Four, Suit.Diamonds)
+        });
 
     [Test]
-    public void TopCardHasScoreOf1()
+    public void Sorting_With_1_2_3_Test()
     {
-        Deck deck = new Deck();
+        Debug.Log("---Deck is ready to use: ---");
+        foreach (var card in _deck.Cards)
+            Debug.Log(card.ToString());
 
-        var topCard = deck.DrawTopCard();
-
-        Assert.AreEqual(1, topCard.Score, $"Top card score should be 1.");
-    }
-
-    [Test]
-    public void BottomCardHasScoreOf10()
-    {
-        Deck deck = new Deck();
-
-        var bottomCard = deck.DrawBottomCard();
-
-        Assert.AreEqual(10, bottomCard.Score, $"Bottom card score should be 10.");
-    }
-
-    [Test]
-    public void SuitThenKindResultTest()
-    {
-        var deck = new Deck();
         Debug.Log("---Deck shuffled.");
-        deck.Shuffle();
+        _deck.Shuffle();
 
         var suitThenKindComparer = new CardComparer(CompareType.SuitThenKind);
 
-        deck.Sort(suitThenKindComparer);
+        _deck.Sort(suitThenKindComparer);
 
-        Debug.Log("---Sorted deck: SuitThenKind---");
-        foreach (var card in deck.Cards)
+        Debug.Log("---Sorted deck: Suit Then Kind---");
+        foreach (var card in _deck.Cards)
             Debug.Log(card.ToString());
     }
 
     [Test]
-    public void KindThenSuitResultTest()
+    public void Sorting_With_7_7_7_Test()
     {
-        Deck deck = new Deck();
+        Debug.Log("---Deck is ready to use: ---");
+        foreach (var card in _deck.Cards)
+            Debug.Log(card.ToString());
+
         Debug.Log("---Deck shuffled.");
-        deck.Shuffle();
+        _deck.Shuffle();
 
         var kindThenSuitComparer = new CardComparer(CompareType.KindThenSuit);
 
-        deck.Sort(kindThenSuitComparer);
+        _deck.Sort(kindThenSuitComparer);
 
         Debug.Log("---Sorted deck: Kind Then Suit---");
-        foreach (var card in deck.Cards)
-            Debug.Log(card.ToString());
-    }
-
-    [Test]
-    public void KindOnlyResultTest()
-    {
-        Deck deck = new Deck();
-        Debug.Log("---Deck shuffled.");
-        deck.Shuffle();
-
-        var kindOnlyComparer = new CardComparer(CompareType.KindOnly);
-
-        deck.Sort(kindOnlyComparer);
-
-        Debug.Log("---Sorted deck: Kind Only---");
-        foreach (var card in deck.Cards)
-            Debug.Log(card.ToString());
-    }
-
-    [Test]
-    public void SuitOnlyResultTest()
-    {
-        Deck deck = new Deck();
-        Debug.Log("---Deck shuffled.");
-        deck.Shuffle();
-
-        var suitOnlyComparer = new CardComparer(CompareType.SuitOnly);
-
-        deck.Sort(suitOnlyComparer);
-
-        Debug.Log("---Sorted deck: Suit Only---");
-        foreach (var card in deck.Cards)
+        foreach (var card in _deck.Cards)
             Debug.Log(card.ToString());
     }
 }

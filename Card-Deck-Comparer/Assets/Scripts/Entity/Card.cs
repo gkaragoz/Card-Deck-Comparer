@@ -10,9 +10,9 @@ namespace AnyCardGame.Entity
         public Suit Suit { get; }
         public int Score { get; }
 
-        public Card(int id, Kind kind, Suit suit)
+        public Card(Kind kind, Suit suit)
         {
-            Id = id;
+            Id = (13 * (int)suit) + (int)kind;
             Kind = kind;
             Suit = suit;
             Score = (int)Kind;
@@ -40,13 +40,13 @@ namespace AnyCardGame.Entity
             switch (Suit)
             {
                 case Suit.Clubs:
-                    return $"♣️ {Kind} of {Suit}";
+                    return $"{Id}: ♣️ {Kind} of {Suit}";
                 case Suit.Diamonds:
-                    return $"♦ {Kind} of {Suit}";
+                    return $"{Id}: ♦ {Kind} of {Suit}";
                 case Suit.Hearts:
-                    return $"♥ {Kind} of {Suit}";
+                    return $"{Id}: ♥ {Kind} of {Suit}";
                 case Suit.Spades:
-                    return $"♠ {Kind} of {Suit}";
+                    return $"{Id}: ♠ {Kind} of {Suit}";
             }
 
             return string.Empty;
