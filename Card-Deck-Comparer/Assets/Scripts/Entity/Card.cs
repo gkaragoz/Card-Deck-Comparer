@@ -1,30 +1,38 @@
 ﻿using AnyCardGame.Enums;
+using Scripts.Utils;
 using System;
+using UnityEngine;
 
 namespace AnyCardGame.Entity
 {
     public class Card : IComparable<Card>
     {
-        public int Id { get; }
-        public Kind Kind { get; }
-        public Suit Suit { get; }
-        public int Score { get; }
+        public int Id { get; private set; }
+        public Kind Kind { get; private set; }
+        public Suit Suit { get; private set; }
+        public int Score { get; private set; }
+
+        public Card(int id)
+        {
+            Setup(id);
+        }
+
+        public Card(string code)
+        {
+            Setup(CardUtils.GetCardIdByCode(code));
+        }
 
         public Card(Kind kind, Suit suit)
         {
-            Id = (13 * (int)suit) + (int)kind;
-            Kind = kind;
-            Suit = suit;
-            Score = (int)Kind;
+            Setup(CardUtils.GetCardIdByEnums(kind, suit));
+        }
 
-            switch (Kind)
-            {
-                case Kind.Jack:
-                case Kind.Queen:
-                case Kind.King:
-                    Score = 10;
-                    break;
-            }
+        private void Setup(int id)
+        {
+            Id = id + 1;
+            Kind = (Kind)(id % 13);
+            Suit = (Suit)Mathf.FloorToInt(id / 13);
+            Score = Mathf.Min((int)(Kind + 1), 10);
         }
 
         public int CompareTo(Card other)

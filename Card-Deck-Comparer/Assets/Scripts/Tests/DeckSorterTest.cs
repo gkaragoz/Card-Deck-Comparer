@@ -7,57 +7,79 @@ using UnityEngine;
 
 public class DeckSorterTest
 {
-    private Deck _deck = new Deck(
+    private PlayerDeck _playerDeck = new PlayerDeck(
             new List<Card>
         {
-            new Card(Kind.Ace, Suit.Hearts),
-            new Card(Kind.Two, Suit.Spades),
-            new Card(Kind.Five, Suit.Diamonds),
-            new Card(Kind.Four, Suit.Hearts),
-            new Card(Kind.Ace, Suit.Spades),
-            new Card(Kind.Three, Suit.Diamonds),
-            new Card(Kind.Four, Suit.Clubs),
-            new Card(Kind.Four, Suit.Spades),
-            new Card(Kind.Ace, Suit.Diamonds),
-            new Card(Kind.Three, Suit.Spades),
-            new Card(Kind.Four, Suit.Diamonds)
+            new Card("H01"),
+            new Card("S02"),
+            new Card("D05"),
+            new Card("H04"),
+            new Card("S01"),
+            new Card("D03"),
+            new Card("C04"),
+            new Card("S04"),
+            new Card("D01"),
+            new Card("S03"),
+            new Card("D04"),
         });
 
     [Test]
-    public void Sorting_With_1_2_3_Test()
+    public void Sorting_With_Straight_Test()
     {
         Debug.Log("---Deck is ready to use: ---");
-        foreach (var card in _deck.Cards)
+        foreach (var card in _playerDeck.Cards)
             Debug.Log(card.ToString());
 
         Debug.Log("---Deck shuffled.");
-        _deck.Shuffle();
+        _playerDeck.Shuffle();
 
         var suitThenKindComparer = new CardComparer(CompareType.SuitThenKind);
 
-        _deck.Sort(suitThenKindComparer);
+        _playerDeck.Sort(suitThenKindComparer);
 
         Debug.Log("---Sorted deck: Suit Then Kind---");
-        foreach (var card in _deck.Cards)
+        foreach (var card in _playerDeck.Cards)
             Debug.Log(card.ToString());
     }
 
     [Test]
-    public void Sorting_With_7_7_7_Test()
+    public void Sorting_With_SameKind_Test()
     {
         Debug.Log("---Deck is ready to use: ---");
-        foreach (var card in _deck.Cards)
+        foreach (var card in _playerDeck.Cards)
             Debug.Log(card.ToString());
 
         Debug.Log("---Deck shuffled.");
-        _deck.Shuffle();
+        _playerDeck.Shuffle();
 
         var kindThenSuitComparer = new CardComparer(CompareType.KindThenSuit);
 
-        _deck.Sort(kindThenSuitComparer);
+        _playerDeck.Sort(kindThenSuitComparer);
 
         Debug.Log("---Sorted deck: Kind Then Suit---");
-        foreach (var card in _deck.Cards)
+        foreach (var card in _playerDeck.Cards)
             Debug.Log(card.ToString());
+    }
+
+    [Test]
+    public void GroupBy_Straight_Test()
+    {
+        Debug.Log("---Deck: ---");
+        foreach (var card in _playerDeck.Cards)
+            Debug.Log(card.ToString());
+
+        Debug.Log("---Grouping deck by Straight: ---");
+        _playerDeck.CreateGroup(GroupType.Straight);
+    }
+
+    [Test]
+    public void GroupBy_SameKind_Test()
+    {
+        Debug.Log("---Deck: ---");
+        foreach (var card in _playerDeck.Cards)
+            Debug.Log(card.ToString());
+
+        Debug.Log("---Grouping deck by SameKind: ---");
+        _playerDeck.CreateGroup(GroupType.SameKind);
     }
 }

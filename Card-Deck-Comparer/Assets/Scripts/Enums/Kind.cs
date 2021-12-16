@@ -2,7 +2,7 @@ namespace AnyCardGame.Enums
 {
     public enum Kind
     {
-        Ace = 1,
+        Ace = 0,
         Two,
         Three,
         Four,

@@ -1,5 +1,4 @@
-﻿using AnyCardGame.Enums;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace AnyCardGame.Entity
@@ -13,13 +12,8 @@ namespace AnyCardGame.Entity
         {
             Cards = new List<Card>();
 
-            foreach (Suit suit in Enum.GetValues(typeof(Suit)))
-            {
-                foreach (Kind kind in Enum.GetValues(typeof(Kind)))
-                {
-                    Cards.Add(new Card(kind, suit));
-                }
-            }
+            for (int ii = 0; ii < 52; ii++)
+                Cards.Add(new Card(ii));
         }
 
         public Deck(List<Card> cards)
