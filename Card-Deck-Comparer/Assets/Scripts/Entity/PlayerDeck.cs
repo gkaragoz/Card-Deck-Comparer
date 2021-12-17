@@ -1,6 +1,7 @@
 ﻿using AnyCardGame.Enums;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace AnyCardGame.Entity
 {
@@ -39,7 +40,7 @@ namespace AnyCardGame.Entity
 
         private void GroupBy_Straight()
         {
-            var pendingCards = Cards.OrderBy(card => card.Id).ToList();
+            var pendingCards = Cards.OrderByDescending(card => card.Id).ToList();
 
             var searchedCards = new List<Card>();
 
@@ -48,7 +49,7 @@ namespace AnyCardGame.Entity
                 var currentCard = pendingCards[ii];
                 var previousCard = pendingCards[ii - 1];
 
-                if (currentCard.Id - 1 == previousCard.Id && currentCard.Suit == previousCard.Suit)
+                if (currentCard.Id + 1 == previousCard.Id && currentCard.Suit == previousCard.Suit)
                 {
                     searchedCards.Add(currentCard);
 
@@ -114,7 +115,7 @@ namespace AnyCardGame.Entity
                 UngrouppedCards.AddRange(searchedCards);
 
             if (pendingCards.Count <= 2)
-                            UngrouppedCards.AddRange(searchedCards);
+                UngrouppedCards.AddRange(pendingCards);
             else
                 GroupBySameKind(pendingCards);
         }
