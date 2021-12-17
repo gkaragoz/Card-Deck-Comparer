@@ -1,4 +1,5 @@
 using AnyCardGame.Entity;
+using AnyCardGame.Entity.Decks;
 using NUnit.Framework;
 
 public class DeckInitialTest

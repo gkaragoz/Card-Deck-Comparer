@@ -3,7 +3,7 @@ using Scripts.Utils;
 using System;
 using UnityEngine;
 
-namespace AnyCardGame.Entity
+namespace AnyCardGame.Entity.Cards
 {
     public class Card : IComparable<Card>
     {

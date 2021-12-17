@@ -1,4 +1,5 @@
 using AnyCardGame.Entity;
+using AnyCardGame.Entity.Decks;
 using AnyCardGame.Enums;
 using AnyCardGame.Utils;
 using NUnit.Framework;

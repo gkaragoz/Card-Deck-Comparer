@@ -1,13 +1,13 @@
-﻿using AnyCardGame.Entity;
+﻿using AnyCardGame.Entity.Cards;
+using AnyCardGame.Entity.Players;
 using AnyCardGame.Enums;
-using AnyCardGame.Utils;
 using NUnit.Framework;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class DeckSorterTest
 {
-    private PlayerDeck _playerDeck = new PlayerDeck(
+    private Player _player = new Player(
             new List<Card>
         {
             new Card("H01"),
@@ -24,62 +24,24 @@ public class DeckSorterTest
         });
 
     [Test]
-    public void Sorting_With_Straight_Test()
-    {
-        Debug.Log("---Deck is ready to use: ---");
-        foreach (var card in _playerDeck.Cards)
-            Debug.Log(card.ToString());
-
-        Debug.Log("---Deck shuffled.");
-        _playerDeck.Shuffle();
-
-        var suitThenKindComparer = new CardComparer(CompareType.SuitThenKind);
-
-        _playerDeck.Sort(suitThenKindComparer);
-
-        Debug.Log("---Sorted deck: Suit Then Kind---");
-        foreach (var card in _playerDeck.Cards)
-            Debug.Log(card.ToString());
-    }
-
-    [Test]
-    public void Sorting_With_SameKind_Test()
-    {
-        Debug.Log("---Deck is ready to use: ---");
-        foreach (var card in _playerDeck.Cards)
-            Debug.Log(card.ToString());
-
-        Debug.Log("---Deck shuffled.");
-        _playerDeck.Shuffle();
-
-        var kindThenSuitComparer = new CardComparer(CompareType.KindThenSuit);
-
-        _playerDeck.Sort(kindThenSuitComparer);
-
-        Debug.Log("---Sorted deck: Kind Then Suit---");
-        foreach (var card in _playerDeck.Cards)
-            Debug.Log(card.ToString());
-    }
-
-    [Test]
-    public void GroupBy_Straight_Test()
+    public void Sort_By_Straight_Test()
     {
         Debug.Log("---Deck: ---");
-        foreach (var card in _playerDeck.Cards)
+        foreach (var card in _player.Deck.Cards)
             Debug.Log(card.ToString());
 
         Debug.Log("---Grouping deck by Straight: ---");
-        _playerDeck.CreateGroup(GroupType.Straight);
+        _player.SortDeck(GroupType.Straight);
     }
 
     [Test]
-    public void GroupBy_SameKind_Test()
+    public void Sort_By_SameKind_Test()
     {
         Debug.Log("---Deck: ---");
-        foreach (var card in _playerDeck.Cards)
+        foreach (var card in _player.Deck.Cards)
             Debug.Log(card.ToString());
 
         Debug.Log("---Grouping deck by SameKind: ---");
-        _playerDeck.CreateGroup(GroupType.SameKind);
+        _player.SortDeck(GroupType.SameKind);
     }
 }

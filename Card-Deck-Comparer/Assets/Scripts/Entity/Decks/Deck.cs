@@ -1,12 +1,15 @@
-﻿using System;
+﻿using AnyCardGame.Entity.Cards;
+using AnyCardGame.Enums;
+using System;
 using System.Collections.Generic;
 
-namespace AnyCardGame.Entity
+namespace AnyCardGame.Entity.Decks
 {
     public class Deck
     {
         public List<Card> Cards { get; }
         public int Count => Cards.Count;
+        public Sorter Sorter { get; private set; }
 
         public Deck()
         {
@@ -14,11 +17,19 @@ namespace AnyCardGame.Entity
 
             for (int ii = 0; ii < 52; ii++)
                 Cards.Add(new Card(ii));
+
+            Sorter = new Sorter();
         }
 
         public Deck(List<Card> cards)
         {
             Cards = cards;
+            Sorter = new Sorter();
+        }
+
+        public GrouppedDeck Sort(GroupType groupType)
+        {
+            return Sorter.Sort(this, groupType);
         }
 
         public Card DrawCardAt(int index)

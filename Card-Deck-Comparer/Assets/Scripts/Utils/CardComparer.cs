@@ -1,4 +1,5 @@
 ﻿using AnyCardGame.Entity;
+using AnyCardGame.Entity.Cards;
 using AnyCardGame.Enums;
 using System;
 using System.Collections.Generic;

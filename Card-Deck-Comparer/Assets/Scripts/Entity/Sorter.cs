@@ -1,45 +1,39 @@
-﻿using AnyCardGame.Enums;
+﻿using AnyCardGame.Entity.Cards;
+using AnyCardGame.Entity.Decks;
+using AnyCardGame.Enums;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace AnyCardGame.Entity
 {
-    public class PlayerDeck : Deck
+    public class Sorter
     {
-        public List<GrouppedCards> GrouppedCards { get; set; }
-        public List<Card> UngrouppedCards { get; set; }
-
-        public PlayerDeck() : base()
-        {
-            GrouppedCards = new List<GrouppedCards>();
-            UngrouppedCards = new List<Card>();
-        }
-
-        public PlayerDeck(List<Card> cards) : base(cards)
-        {
-            GrouppedCards = new List<GrouppedCards>();
-            UngrouppedCards = new List<Card>();
-        }
-
-        public void CreateGroup(GroupType groupType)
+        public GrouppedDeck Sort(Deck deck, GroupType groupType)
         {
             switch (groupType)
             {
                 case GroupType.Straight:
-                    GroupBy_Straight();
-                    break;
+                    return GroupByStraight(new List<Card>(deck.Cards));
                 case GroupType.SameKind:
-                    GroupBySameKind();
-                    break;
+                    return GroupBySameKind(new GrouppedDeck(GroupType.SameKind), new List<Card>(deck.Cards));
                 case GroupType.Smart:
-                    GroupBy_Smart();
+                    // Straight();
+                    // SameKind();
+
+                    // (Straight() < SameKind()) ? Straight() : SameKind();
                     break;
             }
+
+            return null;
         }
 
-        private void GroupBy_Straight()
+        #region Straight
+
+        private GrouppedDeck GroupByStraight(List<Card> deck)
         {
-            var pendingCards = Cards.OrderByDescending(card => card.Id).ToList();
+            var grouppedDeck = new GrouppedDeck(GroupType.Straight);
+
+            var pendingCards = deck.OrderByDescending(card => card.Id).ToList();
 
             var searchedCards = new List<Card>();
 
@@ -57,9 +51,9 @@ namespace AnyCardGame.Entity
                         searchedCards.Add(previousCard);
 
                         if (searchedCards.Count > 2)
-                            GrouppedCards.Add(new GrouppedCards(searchedCards, GroupType.Straight));
+                            grouppedDeck.AddGrouppedCard(new GrouppedCard(searchedCards, GroupType.Straight));
                         else
-                            UngrouppedCards.AddRange(searchedCards);
+                            grouppedDeck.AddUngrouppedCards(searchedCards);
                     }
                 }
                 else
@@ -67,26 +61,27 @@ namespace AnyCardGame.Entity
                     searchedCards.Add(currentCard);
 
                     if (searchedCards.Count > 2)
-                        GrouppedCards.Add(new GrouppedCards(searchedCards, GroupType.Straight));
+                        grouppedDeck.AddGrouppedCard(new GrouppedCard(searchedCards, GroupType.Straight));
                     else
                     {
                         if (ii == 1)
                             searchedCards.Add(previousCard);
 
-                        UngrouppedCards.AddRange(searchedCards);
+                        grouppedDeck.AddUngrouppedCards(searchedCards);
                     }
 
                     searchedCards = new List<Card>();
                 }
             }
+
+            return grouppedDeck;
         }
 
-        private void GroupBySameKind()
-        {
-            GroupBySameKind(new List<Card>(Cards));
-        }
+        #endregion
 
-        private void GroupBySameKind(List<Card> pendingCards)
+        #region SameKind
+
+        private GrouppedDeck GroupBySameKind(GrouppedDeck grouppedDeck, List<Card> pendingCards)
         {
             var searchedCards = new List<Card>();
             var searchingCard = pendingCards[0];
@@ -109,15 +104,21 @@ namespace AnyCardGame.Entity
             }
 
             if (searchedCards.Count > 2)
-                GrouppedCards.Add(new GrouppedCards(searchedCards, GroupType.SameKind));
+                grouppedDeck.AddGrouppedCard(new GrouppedCard(searchedCards, GroupType.SameKind));
             else
-                UngrouppedCards.AddRange(searchedCards);
+                grouppedDeck.AddUngrouppedCards(searchedCards);
 
             if (pendingCards.Count <= 2)
-                UngrouppedCards.AddRange(pendingCards);
+                grouppedDeck.AddUngrouppedCards(pendingCards);
             else
-                GroupBySameKind(pendingCards);
+                return GroupBySameKind(grouppedDeck, pendingCards);
+
+            return grouppedDeck;
         }
+
+        #endregion
+
+        #region Smart
 
         /* ____________________STRAIGHT - POSSIBLE GROUPPABLE CARDS__________________________
          * || group of 3 cards          = n - 2;                                           ||
@@ -152,9 +153,12 @@ namespace AnyCardGame.Entity
          * ||               ||                               ||                            ||
          * ||_______________||_______________________________||____________________________||
          * */
-        private void GroupBy_Smart()
+        private static void GroupBy_Smart()
         {
 
         }
+
+        #endregion
+
     }
 }

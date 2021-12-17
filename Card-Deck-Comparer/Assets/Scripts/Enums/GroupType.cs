@@ -2,6 +2,7 @@
 {
     public enum GroupType
     {
+        None,
         Straight,
         SameKind,
         Smart,
