@@ -1,7 +1,6 @@
 ﻿using AnyCardGame.Enums;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 
 namespace AnyCardGame.Entity
 {
@@ -120,6 +119,39 @@ namespace AnyCardGame.Entity
                 GroupBySameKind(pendingCards);
         }
 
+        /* ____________________STRAIGHT - POSSIBLE GROUPPABLE CARDS__________________________
+         * || group of 3 cards          = n - 2;                                           ||
+           || total card groups count   = n * (n + 1) , "n" is equal to "group of 3 cards" ||
+		   ||		                      ___________                                      ||
+		   ||			                       2                                           ||
+		   ||*******************ALGORITHM STEPS****************                            ||
+           ||   Hearts 1  ||       Hearts 1     Hearts 2     ||                            ||
+           ||   Hearts 2  ||       Hearts 2     Hearts 3     ||                            ||
+           ||   Hearts 3  ||       Hearts 3     Hearts 4     ||                            ||
+           ||   Hearts 4  ||                                 ||                            ||
+           ||             ||       Hearts 1                  ||                            ||
+           ||             ||       Hearts 2                  ||                            ||
+           ||             ||       Hearts 3                  ||                            ||
+           ||             ||       Hearts 4                  ||                            ||
+           ||_____________||_________________________________||____________________________||
+         * */
+
+        /* ____________________SAME KINDS - POSSIBLE GROUPPABLE CARDS________________________
+         * || required cards amount for group = n = 4                                      ||
+         * || total card groups count         = n combination of 3                         ||
+         * ||		                                                                       ||
+         * ||			                                                                   ||
+         * ||*******************ALGORITHM STEPS****************                            ||
+         * ||   Spades   7  ||     Diamonds 7   Spades   7   ||                            ||
+         * ||   Diamonds 7  ||     Hearts   7   Hearts   7   ||                            ||
+         * ||   Hearts   7  ||     Clubs    7   Clubs    7   ||                            ||
+         * ||   Clubs    7  ||                               ||                            ||
+         * ||               ||     Spades   7   Spades   7   ||                            ||
+         * ||               ||     Diamonds 7   Diamonds 7   ||                            ||
+         * ||               ||     Clubs    7   Hearts   7   ||                            ||
+         * ||               ||                               ||                            ||
+         * ||_______________||_______________________________||____________________________||
+         * */
         private void GroupBy_Smart()
         {
 
