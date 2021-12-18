@@ -21,7 +21,9 @@ namespace AnyCardGame.Entity
                     // SameKind();
 
                     // (Straight() < SameKind()) ? Straight() : SameKind();
-                    break;
+
+                    // TODO: update this.
+                    return GroupByStraight(new List<Card>(deck.Cards));
             }
 
             return null;

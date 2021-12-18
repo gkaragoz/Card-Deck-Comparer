@@ -30,14 +30,6 @@ namespace AnyCardGame.Entity.Players
         public void SortDeck(GroupType groupType)
         {
             GrouppedDeck = Deck.Sort(groupType);
-
-            var grpAll = GrouppedDeck.AllCards.OrderBy(c => c.Id).ToList();
-            var deck = Deck.Cards.OrderBy(c => c.Id).ToList();
-
-            for (int ii = 0; ii < grpAll.Count(); ii++)
-            {
-                Debug.Log(grpAll[ii] == deck[ii]);
-            }
         }
     }
 }

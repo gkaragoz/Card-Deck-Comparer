@@ -35,5 +35,15 @@ namespace AnyCardGame.Entity.Decks
             _ungrouppedCards.AddRange(cards);
             AllCards.AddRange(cards);
         }
+
+        public List<GrouppedCard> GetGrouppedCards()
+        {
+            return _cards;
+        }
+
+        public List<Card> GetUngrouppedCards()
+        {
+            return _ungrouppedCards;
+        }
     }
 }
