@@ -29,5 +29,17 @@ namespace AnyCardGame.Entity.Players
         {
             GrouppedDeck = Deck.Sort(groupType);
         }
+
+        public int[] GetGrouppedDeckCardIds()
+        {
+            var allCards = GrouppedDeck == null ? Deck.Cards : GrouppedDeck.GetAllCardBySorted();
+
+            int cardCount = allCards.Count;
+            int[] ids = new int[cardCount];
+            for (int ii = 0; ii < cardCount; ii++)
+                ids[ii] = allCards[ii].Id;
+
+            return ids;
+        }
     }
 }

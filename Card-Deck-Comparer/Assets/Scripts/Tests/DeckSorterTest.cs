@@ -30,7 +30,7 @@ public class DeckSorterTest
     {
         _player.SortDeck(GroupType.SameKind);
 
-        var playerAllGrouppedCards = _player.GrouppedDeck.AllCards.OrderBy(c => c.Id).ToList();
+        var playerAllGrouppedCards = _player.GrouppedDeck.GetAllCardBySorted().OrderBy(c => c.Id).ToList();
         var playerAllCards = _player.Deck.Cards.OrderBy(c => c.Id).ToList();
 
         for (int ii = 0; ii < playerAllGrouppedCards.Count(); ii++)
@@ -43,7 +43,7 @@ public class DeckSorterTest
     {
         _player.SortDeck(GroupType.Straight);
 
-        var playerAllGrouppedCards = _player.GrouppedDeck.AllCards.OrderBy(c => c.Id).ToList();
+        var playerAllGrouppedCards = _player.GrouppedDeck.GetAllCardBySorted().OrderBy(c => c.Id).ToList();
         var playerAllCards = _player.Deck.Cards.OrderBy(c => c.Id).ToList();
 
         for (int ii = 0; ii < playerAllGrouppedCards.Count(); ii++)
@@ -55,7 +55,7 @@ public class DeckSorterTest
     {
         _player.SortDeck(GroupType.Smart);
 
-        var playerAllGrouppedCards = _player.GrouppedDeck.AllCards.OrderBy(c => c.Id).ToList();
+        var playerAllGrouppedCards = _player.GrouppedDeck.GetAllCardBySorted().OrderBy(c => c.Id).ToList();
         var playerAllCards = _player.Deck.Cards.OrderBy(c => c.Id).ToList();
 
         for (int ii = 0; ii < playerAllGrouppedCards.Count(); ii++)

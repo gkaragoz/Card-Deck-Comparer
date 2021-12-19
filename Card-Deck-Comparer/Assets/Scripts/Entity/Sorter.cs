@@ -33,7 +33,7 @@ namespace AnyCardGame.Entity
             {
                 var ungrouppedSameKindGrouppedDeck = GroupBySameKind(new GrouppedDeck(groupType), new List<Card>(grouppedDeck.GetUngrouppedCards().Group));
 
-                if (ungrouppedSameKindGrouppedDeck.UngrouppedCardsTotalScore <= bestScore && ungrouppedSameKindGrouppedDeck.AllCards.Count > 0)
+                if (ungrouppedSameKindGrouppedDeck.UngrouppedCardsTotalScore <= bestScore && ungrouppedSameKindGrouppedDeck.GetAllCardsCount() > 0)
                 {
                     bestScore = ungrouppedSameKindGrouppedDeck.UngrouppedCardsTotalScore;
                     bestGrouppedDeck = grouppedDeck;
@@ -148,11 +148,11 @@ namespace AnyCardGame.Entity
             var finalStraightGrouppedDeck = GetBestGrouppedDeck(subDestructedStraightGrouppedDeck, GroupType.Straight);
             var finalSameKindGrouppedDeck = GetBestGrouppedDeck(subDestructedSameKindGruppedDeck, GroupType.SameKind);
 
-            if (finalStraightGrouppedDeck.AllCards.Count == 0 && finalSameKindGrouppedDeck.AllCards.Count == 0)
+            if (finalStraightGrouppedDeck.GetAllCardsCount() == 0 && finalSameKindGrouppedDeck.GetAllCardsCount() == 0)
                 return straightGrouppedDeck;
-            else if (finalStraightGrouppedDeck.AllCards.Count == 0)
+            else if (finalStraightGrouppedDeck.GetAllCardsCount() == 0)
                 return finalSameKindGrouppedDeck;
-            else if (finalSameKindGrouppedDeck.AllCards.Count == 0)
+            else if (finalSameKindGrouppedDeck.GetAllCardsCount() == 0)
                 return finalStraightGrouppedDeck;
             else
                 return finalStraightGrouppedDeck.UngrouppedCardsTotalScore <= finalSameKindGrouppedDeck.UngrouppedCardsTotalScore ? finalStraightGrouppedDeck : finalSameKindGrouppedDeck;

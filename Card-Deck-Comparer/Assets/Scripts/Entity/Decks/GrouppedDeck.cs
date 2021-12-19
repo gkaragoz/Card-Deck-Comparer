@@ -10,7 +10,6 @@ namespace AnyCardGame.Entity.Decks
         private List<GrouppedCard> _grouppedCards;
         private UngrouppedCards _ungrouppedCards;
 
-        public List<Card> AllCards { get; private set; }
         public GroupType GroupType { get; private set; }
         public int UngrouppedCardsTotalScore => _ungrouppedCards.Score;
 
@@ -19,19 +18,39 @@ namespace AnyCardGame.Entity.Decks
             _grouppedCards = new List<GrouppedCard>();
             _ungrouppedCards = new UngrouppedCards(new List<Card>(), GroupType.None);
 
-            AllCards = new List<Card>();
-
             GroupType = groupType;
+        }
+
+        public int GetAllCardsCount()
+        {
+            var count = 0;
+
+            foreach (var grouppedCards in _grouppedCards)
+                count += grouppedCards.Group.Count;
+
+            count += _ungrouppedCards.Group.Count;
+
+            return count;
+        }
+
+        public List<Card> GetAllCardBySorted()
+        {
+            var cards = new List<Card>();
+
+            foreach (var grouppedCards in _grouppedCards)
+                cards.AddRange(grouppedCards.Group);
+
+            cards.AddRange(_ungrouppedCards.Group);
+
+            return cards;
         }
 
         public void AddGrouppedCard(GrouppedCard card)
         {
             _grouppedCards.Add(card);
 
-            if (card.Group.Any(c1 => AllCards.Any(c2 => c1.Id == c2.Id)))
+            if (card.Group.Any(c1 => GetAllCardBySorted().Any(c2 => c1.Id == c2.Id)))
                 return;
-
-            AllCards.AddRange(card.Group);
         }
 
         public void AddGrouppedCards(List<GrouppedCard> cards)
@@ -43,7 +62,6 @@ namespace AnyCardGame.Entity.Decks
         public void AddUngrouppedCards(UngrouppedCards cards)
         {
             _ungrouppedCards.AddCards(cards.Group);
-            AllCards.AddRange(cards.Group);
         }
 
         public List<GrouppedCard> GetGrouppedCards()
