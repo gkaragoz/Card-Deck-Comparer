@@ -69,7 +69,7 @@ public class DeckSorterTest
         foreach (var grouppedCard in grouppedCards)
             expectedGrouppedDeck.AddGrouppedCard(grouppedCard);
 
-        expectedGrouppedDeck.SetUngrouppedCards(new UngrouppedCards(ungrouppedCards, GroupType.None));
+        expectedGrouppedDeck.AddUngrouppedCards(new UngrouppedCards(ungrouppedCards, GroupType.None));
 
         Debug.Log("---Deck: ---");
         foreach (var card in _player.Deck.Cards)
@@ -176,5 +176,17 @@ public class DeckSorterTest
             grouppedCards_01,
             grouppedCards_02
         }, ungrouppedCards, GroupType.SameKind);
+    }
+
+
+    [Test]
+    public void SortBySmartTest()
+    {
+        Debug.Log("---Deck: ---");
+        foreach (var card in _player.Deck.Cards)
+            Debug.Log(card.ToString());
+
+        Debug.Log($"---Grouping deck by : {GroupType.Smart}---");
+        _player.SortDeck(GroupType.Smart);
     }
 }

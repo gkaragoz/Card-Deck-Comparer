@@ -3,6 +3,7 @@ using AnyCardGame.Entity.Decks;
 using AnyCardGame.Enums;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace AnyCardGame.Entity
 {
@@ -17,25 +18,40 @@ namespace AnyCardGame.Entity
                 case GroupType.SameKind:
                     return GroupBySameKind(new GrouppedDeck(GroupType.SameKind), new List<Card>(deck.Cards));
                 case GroupType.Smart:
-                    // Straight();
-                    // SameKind();
-
-                    // (Straight() < SameKind()) ? Straight() : SameKind();
-
-                    // TODO: update this.
-                    return GroupByStraight(new List<Card>(deck.Cards));
+                    return GroupBySmart(deck);
             }
 
             return null;
         }
 
+        private GrouppedDeck GetBestGrouppedDeck(List<GrouppedDeck> grouppedDecks, GroupType groupType)
+        {
+            var bestScore = Mathf.Infinity;
+            var bestGrouppedDeck = new GrouppedDeck(groupType);
+
+            grouppedDecks.ForEach((GrouppedDeck grouppedDeck) =>
+            {
+                var ungrouppedSameKindGrouppedDeck = GroupBySameKind(new GrouppedDeck(groupType), new List<Card>(grouppedDeck.GetUngrouppedCards().Group));
+
+                if (ungrouppedSameKindGrouppedDeck.UngrouppedCardsTotalScore <= bestScore)
+                {
+                    bestScore = ungrouppedSameKindGrouppedDeck.UngrouppedCardsTotalScore;
+                    bestGrouppedDeck = grouppedDeck;
+                    bestGrouppedDeck.AddGrouppedCards(ungrouppedSameKindGrouppedDeck.GetGrouppedCards());
+                    bestGrouppedDeck.SetUnrouppedCards(ungrouppedSameKindGrouppedDeck.GetUngrouppedCards());
+                }
+            });
+
+            return bestGrouppedDeck;
+        }
+
         #region Straight
 
-        private GrouppedDeck GroupByStraight(List<Card> deck)
+        private GrouppedDeck GroupByStraight(List<Card> cards)
         {
             var grouppedDeck = new GrouppedDeck(GroupType.Straight);
 
-            var pendingCards = deck.OrderByDescending(card => card.Id).ToList();
+            var pendingCards = cards.OrderByDescending(card => card.Id).ToList();
 
             var searchedCards = new List<Card>();
 
@@ -55,7 +71,7 @@ namespace AnyCardGame.Entity
                         if (searchedCards.Count > 2)
                             grouppedDeck.AddGrouppedCard(new GrouppedCard(searchedCards, GroupType.Straight));
                         else
-                            grouppedDeck.SetUngrouppedCards(new UngrouppedCards(searchedCards, GroupType.None));
+                            grouppedDeck.AddUngrouppedCards(new UngrouppedCards(searchedCards, GroupType.None));
                     }
                 }
                 else
@@ -69,7 +85,7 @@ namespace AnyCardGame.Entity
                         if (ii == 1)
                             searchedCards.Add(previousCard);
 
-                        grouppedDeck.SetUngrouppedCards(new UngrouppedCards(searchedCards, GroupType.None));
+                        grouppedDeck.AddUngrouppedCards(new UngrouppedCards(searchedCards, GroupType.None));
                     }
 
                     searchedCards = new List<Card>();
@@ -108,10 +124,10 @@ namespace AnyCardGame.Entity
             if (searchedCards.Count > 2)
                 grouppedDeck.AddGrouppedCard(new GrouppedCard(searchedCards, GroupType.SameKind));
             else
-                grouppedDeck.SetUngrouppedCards(new UngrouppedCards(searchedCards, GroupType.None));
+                grouppedDeck.AddUngrouppedCards(new UngrouppedCards(searchedCards, GroupType.None));
 
             if (pendingCards.Count <= 2)
-                grouppedDeck.SetUngrouppedCards(new UngrouppedCards(pendingCards, GroupType.None));
+                grouppedDeck.AddUngrouppedCards(new UngrouppedCards(pendingCards, GroupType.None));
             else
                 return GroupBySameKind(grouppedDeck, pendingCards);
 
@@ -121,43 +137,18 @@ namespace AnyCardGame.Entity
         #endregion
 
         #region Smart
-
-        /* ____________________STRAIGHT - POSSIBLE GROUPPABLE CARDS__________________________
-         * || group of 3 cards          = n - 2;                                           ||
-           || total card groups count   = n * (n + 1) , "n" is equal to "group of 3 cards" ||
-		   ||		                      ___________                                      ||
-		   ||			                       2                                           ||
-		   ||*******************ALGORITHM STEPS****************                            ||
-           ||   Hearts 1  ||       Hearts 1     Hearts 2     ||                            ||
-           ||   Hearts 2  ||       Hearts 2     Hearts 3     ||                            ||
-           ||   Hearts 3  ||       Hearts 3     Hearts 4     ||                            ||
-           ||   Hearts 4  ||                                 ||                            ||
-           ||             ||       Hearts 1                  ||                            ||
-           ||             ||       Hearts 2                  ||                            ||
-           ||             ||       Hearts 3                  ||                            ||
-           ||             ||       Hearts 4                  ||                            ||
-           ||_____________||_________________________________||____________________________||
-         * */
-
-        /* ____________________SAME KINDS - POSSIBLE GROUPPABLE CARDS________________________
-         * || required cards amount for group = n = 4                                      ||
-         * || total card groups count         = n combination of 3                         ||
-         * ||		                                                                       ||
-         * ||			                                                                   ||
-         * ||*******************ALGORITHM STEPS****************                            ||
-         * ||   Spades   7  ||     Diamonds 7   Spades   7   ||                            ||
-         * ||   Diamonds 7  ||     Hearts   7   Hearts   7   ||                            ||
-         * ||   Hearts   7  ||     Clubs    7   Clubs    7   ||                            ||
-         * ||   Clubs    7  ||                               ||                            ||
-         * ||               ||     Spades   7   Spades   7   ||                            ||
-         * ||               ||     Diamonds 7   Diamonds 7   ||                            ||
-         * ||               ||     Clubs    7   Hearts   7   ||                            ||
-         * ||               ||                               ||                            ||
-         * ||_______________||_______________________________||____________________________||
-         * */
-        private static void GroupBy_Smart()
+        private GrouppedDeck GroupBySmart(Deck deck)
         {
+            var straightGrouppedDeck = GroupByStraight(new List<Card>(deck.Cards));
+            var sameKindGrouppedDeck = GroupBySameKind(new GrouppedDeck(GroupType.SameKind), new List<Card>(deck.Cards));
 
+            var subDestructedStraightGrouppedDeck = straightGrouppedDeck.DestructToSubDecks();
+            var subDestructedSameKindGruppedDeck = sameKindGrouppedDeck.DestructToSubDecks();
+            
+            var finalStraightGrouppedDeck = GetBestGrouppedDeck(subDestructedStraightGrouppedDeck, GroupType.Straight);
+            var finalSameKindGrouppedDeck = GetBestGrouppedDeck(subDestructedSameKindGruppedDeck, GroupType.SameKind);
+
+            return finalStraightGrouppedDeck.UngrouppedCardsTotalScore <= finalSameKindGrouppedDeck.UngrouppedCardsTotalScore ? finalStraightGrouppedDeck : finalSameKindGrouppedDeck;
         }
 
         #endregion
