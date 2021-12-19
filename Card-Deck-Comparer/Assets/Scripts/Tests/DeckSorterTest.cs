@@ -78,15 +78,15 @@ public class DeckSorterTest
         Debug.Log($"---Grouping deck by : {groupType}---");
         _player.SortDeck(groupType);
 
-        var expectedGrouppedCards = expectedGrouppedDeck.GetGrouppedCards();
-        var actualGrouppedCards = _player.GrouppedDeck.GetGrouppedCards();
+        var expectedGrouppedCards = expectedGrouppedDeck.GetGrouppedCards().OrderBy(gc => gc.GroupType).ToList();
+        var actualGrouppedCards = _player.GrouppedDeck.GetGrouppedCards().OrderBy(gc => gc.GroupType).ToList();
 
         for (int ii = 0; ii < expectedGrouppedCards.Count; ii++)
         {
-            var expectedCards = expectedGrouppedCards[ii].Group;
+            var expectedCards = expectedGrouppedCards[ii].Group.OrderBy(c => c.Id).ToList();
             var expectedCardsGroupType = expectedGrouppedCards[ii].GroupType;
 
-            var actualCards = actualGrouppedCards[ii].Group;
+            var actualCards = actualGrouppedCards[ii].Group.OrderBy(c => c.Id).ToList();
             var actualCardsGroupType = actualGrouppedCards[ii].GroupType;
 
             Assert.AreEqual(expectedCardsGroupType, actualCardsGroupType, "Groupped cards' group types are matching.");
@@ -182,11 +182,38 @@ public class DeckSorterTest
     [Test]
     public void SortBySmartTest()
     {
-        Debug.Log("---Deck: ---");
-        foreach (var card in _player.Deck.Cards)
-            Debug.Log(card.ToString());
+        var grouppedCards_01 = new GrouppedCard(new List<Card>
+        {
+            new Card("S01"),
+            new Card("S02"),
+            new Card("S03"),
+        }, GroupType.Straight);
 
-        Debug.Log($"---Grouping deck by : {GroupType.Smart}---");
-        _player.SortDeck(GroupType.Smart);
+        var grouppedCards_02 = new GrouppedCard(new List<Card>
+        {
+            new Card("S04"),
+            new Card("H04"),
+            new Card("C04"),
+        }, GroupType.SameKind);
+
+        var grouppedCards_03 = new GrouppedCard(new List<Card>
+        {
+            new Card("D03"),
+            new Card("D04"),
+            new Card("D05"),
+        }, GroupType.Straight);
+
+        var ungrouppedCards = new List<Card>
+        {
+            new Card("D01"),
+            new Card("H01"),
+        };
+
+        SortByXTestHelper(new List<GrouppedCard>()
+        {
+            grouppedCards_01,
+            grouppedCards_02,
+            grouppedCards_03
+        }, ungrouppedCards, GroupType.Smart);
     }
 }
