@@ -1,7 +1,7 @@
 ﻿using AnyCardGame.Entity.Cards;
 using AnyCardGame.Enums;
 using System.Collections.Generic;
-using UnityEngine;
+using System.Linq;
 
 namespace AnyCardGame.Entity.Decks
 {
@@ -27,6 +27,10 @@ namespace AnyCardGame.Entity.Decks
         public void AddGrouppedCard(GrouppedCard card)
         {
             _grouppedCards.Add(card);
+
+            if (card.Group.Any(c1 => AllCards.Any(c2 => c1.Id == c2.Id)))
+                return;
+
             AllCards.AddRange(card.Group);
         }
 
@@ -155,18 +159,18 @@ namespace AnyCardGame.Entity.Decks
 
                 var grouppedDeck = new GrouppedDeck(GroupType.Straight);
 
-                var destructedGrouppedCards = new GrouppedCard(GroupType.Straight);
-                var destructedUngrouppedCards = new UngrouppedCards(GroupType.None);
+                var destructedGrouppedCards = new List<Card>();
+                var destructedUngrouppedCards = new List<Card>();
                 for (int ii = 0; ii < cardsCount; ii++)
                 {
                     if (ii >= takingStartIndex && ii < takingStartIndex + takingGroupCount)
-                        destructedGrouppedCards.AddCard(grouppedCards[ii]);
+                        destructedGrouppedCards.Add(grouppedCards[ii]);
                     else
-                        destructedUngrouppedCards.AddCard(grouppedCards[ii]);
+                        destructedUngrouppedCards.Add(grouppedCards[ii]);
                 }
 
-                grouppedDeck.AddGrouppedCard(destructedGrouppedCards);
-                grouppedDeck.AddUngrouppedCards(destructedUngrouppedCards);
+                grouppedDeck.AddGrouppedCard(new GrouppedCard(destructedGrouppedCards, GroupType.Straight));
+                grouppedDeck.AddUngrouppedCards(new UngrouppedCards(destructedUngrouppedCards, GroupType.None));
 
                 destructedGrouppedDeck.Add(grouppedDeck);
 
@@ -202,19 +206,18 @@ namespace AnyCardGame.Entity.Decks
             {
                 var grouppedDeck = new GrouppedDeck(GroupType.SameKind);
 
-                var destructedGrouppedCards = new GrouppedCard(GroupType.SameKind);
-                var destructedUngrouppedCards = new UngrouppedCards(GroupType.None);
-
+                var destructedGrouppedCards = new List<Card>();
+                var destructedUngrouppedCards = new List<Card>();
                 for (int jj = 0; jj < cardsCount; jj++)
                 {
                     if (jj == skippingIndex)
-                        destructedUngrouppedCards.AddCard(grouppedCards[jj]);
+                        destructedUngrouppedCards.Add(grouppedCards[jj]);
                     else
-                        destructedGrouppedCards.AddCard(grouppedCards[jj]);
+                        destructedGrouppedCards.Add(grouppedCards[jj]);
                 }
 
-                grouppedDeck.AddGrouppedCard(destructedGrouppedCards);
-                grouppedDeck.AddUngrouppedCards(destructedUngrouppedCards);
+                grouppedDeck.AddGrouppedCard(new GrouppedCard(destructedGrouppedCards, GroupType.SameKind));
+                grouppedDeck.AddUngrouppedCards(new UngrouppedCards(destructedUngrouppedCards, GroupType.None));
 
                 destructedGrouppedDeck.Add(grouppedDeck);
 

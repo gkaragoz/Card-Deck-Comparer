@@ -2,7 +2,6 @@
 using AnyCardGame.Entity.Decks;
 using AnyCardGame.Enums;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace AnyCardGame.Entity.Players
 {
@@ -29,7 +28,6 @@ namespace AnyCardGame.Entity.Players
         public void SortDeck(GroupType groupType)
         {
             GrouppedDeck = Deck.Sort(groupType);
-            Debug.Log("Ya allah.");
         }
     }
 }
