@@ -55,7 +55,7 @@ namespace AnyCardGame.Entity
                         if (searchedCards.Count > 2)
                             grouppedDeck.AddGrouppedCard(new GrouppedCard(searchedCards, GroupType.Straight));
                         else
-                            grouppedDeck.AddUngrouppedCards(searchedCards);
+                            grouppedDeck.SetUngrouppedCards(new UngrouppedCards(searchedCards, GroupType.None));
                     }
                 }
                 else
@@ -69,7 +69,7 @@ namespace AnyCardGame.Entity
                         if (ii == 1)
                             searchedCards.Add(previousCard);
 
-                        grouppedDeck.AddUngrouppedCards(searchedCards);
+                        grouppedDeck.SetUngrouppedCards(new UngrouppedCards(searchedCards, GroupType.None));
                     }
 
                     searchedCards = new List<Card>();
@@ -108,10 +108,10 @@ namespace AnyCardGame.Entity
             if (searchedCards.Count > 2)
                 grouppedDeck.AddGrouppedCard(new GrouppedCard(searchedCards, GroupType.SameKind));
             else
-                grouppedDeck.AddUngrouppedCards(searchedCards);
+                grouppedDeck.SetUngrouppedCards(new UngrouppedCards(searchedCards, GroupType.None));
 
             if (pendingCards.Count <= 2)
-                grouppedDeck.AddUngrouppedCards(pendingCards);
+                grouppedDeck.SetUngrouppedCards(new UngrouppedCards(pendingCards, GroupType.None));
             else
                 return GroupBySameKind(grouppedDeck, pendingCards);
 

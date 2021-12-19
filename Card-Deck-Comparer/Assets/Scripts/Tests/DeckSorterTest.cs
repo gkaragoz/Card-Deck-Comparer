@@ -69,7 +69,7 @@ public class DeckSorterTest
         foreach (var grouppedCard in grouppedCards)
             expectedGrouppedDeck.AddGrouppedCard(grouppedCard);
 
-        expectedGrouppedDeck.AddUngrouppedCards(ungrouppedCards);
+        expectedGrouppedDeck.SetUngrouppedCards(new UngrouppedCards(ungrouppedCards, GroupType.None));
 
         Debug.Log("---Deck: ---");
         foreach (var card in _player.Deck.Cards)
@@ -100,8 +100,8 @@ public class DeckSorterTest
             }
         }
 
-        var expectedUngrouppedCards = expectedGrouppedDeck.GetUngrouppedCards().OrderBy(card => card.Id).ToList();
-        var actualUngrouppedCards = _player.GrouppedDeck.GetUngrouppedCards().OrderBy(card => card.Id).ToList();
+        var expectedUngrouppedCards = expectedGrouppedDeck.GetUngrouppedCards().Group.OrderBy(card => card.Id).ToList();
+        var actualUngrouppedCards = _player.GrouppedDeck.GetUngrouppedCards().Group.OrderBy(card => card.Id).ToList();
 
         for (int ii = 0; ii < expectedUngrouppedCards.Count; ii++)
         {

@@ -1,23 +1,22 @@
 ﻿using AnyCardGame.Entity.Cards;
 using AnyCardGame.Enums;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace AnyCardGame.Entity.Decks
 {
     public class GrouppedDeck
     {
-        private List<GrouppedCard> _cards;
-        private List<Card> _ungrouppedCards;
+        private List<GrouppedCard> _grouppedCards;
+        private UngrouppedCards _ungrouppedCards;
 
         public List<Card> AllCards { get; private set; }
         public GroupType GroupType { get; private set; }
-        public int Score => _ungrouppedCards.Count == 0 ? 0 : _ungrouppedCards.Sum(card => card.Score);
+        public int UngrouppedCardsTotalScore => _ungrouppedCards.Score;
 
         public GrouppedDeck(GroupType groupType)
         {
-            _cards = new List<GrouppedCard>();
-            _ungrouppedCards = new List<Card>();
+            _grouppedCards = new List<GrouppedCard>();
+            _ungrouppedCards = new UngrouppedCards(new List<Card>(), GroupType.None);
 
             AllCards = new List<Card>();
 
@@ -26,22 +25,22 @@ namespace AnyCardGame.Entity.Decks
 
         public void AddGrouppedCard(GrouppedCard card)
         {
-            _cards.Add(card);
+            _grouppedCards.Add(card);
             AllCards.AddRange(card.Group);
         }
 
-        public void AddUngrouppedCards(List<Card> cards)
+        public void SetUngrouppedCards(UngrouppedCards cards)
         {
-            _ungrouppedCards.AddRange(cards);
-            AllCards.AddRange(cards);
+            _ungrouppedCards.AddCards(cards.Group);
+            AllCards.AddRange(cards.Group);
         }
 
         public List<GrouppedCard> GetGrouppedCards()
         {
-            return _cards;
+            return _grouppedCards;
         }
 
-        public List<Card> GetUngrouppedCards()
+        public UngrouppedCards GetUngrouppedCards()
         {
             return _ungrouppedCards;
         }
